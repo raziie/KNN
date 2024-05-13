@@ -5,6 +5,11 @@ def compute_euclidean(x1, x2):
     return np.sqrt(np.sum(np.power((x1-x2), 2)))
 
 
+def compute_accuracy(Y_original, Y_predicted):
+    # correct prediction percentage
+    return (np.count_nonzero(Y_original == Y_predicted) / len(Y_original)) * 100
+
+
 class KNN:
 
     def __init__(self, k):
@@ -34,3 +39,11 @@ class KNN:
             unique, counts = np.unique(self.Y_train[neighbors], return_counts=True)
             Y_out = np.append(Y_out, unique[counts.argsort()[-1]])
         return Y_out
+
+    def tune_parameter(self, X_test, Y_test, max_k):
+        accuracies = []
+        for k in range(1, max_k):
+            self.k = k
+            Y_prediction = self.predict(X_test)
+            accuracies.append(compute_accuracy(Y_test, Y_prediction))
+        return accuracies
