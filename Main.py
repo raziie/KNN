@@ -29,6 +29,7 @@ print(X_test)
 print(Y_test)
 
 # Standardize features by removing the mean and scaling to unit variance
+# x = (x - m) / v
 train_variance = np.var(X_train, dtype=np.float64)
 train_mean = np.mean(X_train)
 X_train = (X_train - train_mean) / train_variance
@@ -43,4 +44,5 @@ print(X_test)
 classifier = KNN.KNN(5)
 classifier.fit(X_train, Y_train)
 Y_prediction = classifier.predict(X_test)
+print(Y_prediction == Y_test)
 # print(np.max(np.abs(Y_prediction - Y_test)))
