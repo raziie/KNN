@@ -13,9 +13,9 @@ def compute_accuracy(Y_original, Y_predicted):
 def get_fold_indices(fold_k, X, Y):
     folds = []
     fold_size = len(X) // fold_k
-    for i in range(fold_size):
-        start = i * fold_k
-        end = (i + 1) * fold_k
+    for i in range(fold_k):
+        start = i * fold_size
+        end = (i + 1) * fold_size
         X_test = X[start:end]
         Y_test = Y[start:end]
         X_train = np.concatenate((X[:start], X[end:]), axis=0)
@@ -28,6 +28,8 @@ class KNN:
 
     def __init__(self, k):
         self.k = k
+        self.X_train = None
+        self.Y_train = None
 
     def fit(self, X_train, Y_train):
         self.X_train = X_train
