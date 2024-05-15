@@ -88,25 +88,40 @@ if __name__ == "__main__":
     dataset = pd.read_csv('./archive/IRIS.csv')
 
     # 3 options:
-    # X, Y = extract_data_random_state(dataset, random_state=42)
-    X, Y = extract_data_random(dataset)
+    X, Y = extract_data_random_state(dataset, random_state=42)
+    # X, Y = extract_data_random(dataset)
     # X, Y = extract_data_no_shuffle(dataset)
 
-    # # just KNN
-    # X_train, X_test, Y_train, Y_test = split_data(X, Y, test_ratio=0.25)
-    # X_train, X_test = standardize(X_train, X_test)
-    # knn, Y_prediction, k_accuracy = apply_knn(5, X_train, Y_train, X_test, Y_test)
-    # print("Accuracy = ", k_accuracy, "%")
-    #
-    # # test
-    # print(knn.predict([[6, 3, 5, 2]]))
-    #
-    # # parameter tuning with results
-    # accuracies = knn.tune_parameter(X_test, Y_test, 100)
-    # plt.plot(accuracies, color="skyblue")
-    # plt.show()
+    # just KNN
+    X_train, X_test, Y_train, Y_test = split_data(X, Y, test_ratio=0.25)
+    X_train, X_test = standardize(X_train, X_test)
+    knn, Y_prediction, k_accuracy = apply_knn(10, X_train, Y_train, X_test, Y_test)
+    print("Accuracy = ", k_accuracy, "%")
+
+    # test
+    print(knn.predict([[6, 3, 5, 2]]))
+
+    # parameter tuning with results
+    accuracies = knn.tune_parameter(X_test, Y_test, 100)
+    plt.title("knn parameter tuning")
+    plt.xlabel("k")
+    plt.ylabel("accuracy")
+    plt.plot(range(1, 100), accuracies, "b")
+    plt.show()
 
     # k_fold
     fold_scores, accuracy_mean = apply_k_fold(10, 10, X, Y)
     print("K-Fold Cross-Validation Scores:", fold_scores)
     print("Mean Accuracy:", accuracy_mean)
+
+    # parameter tuning with results
+    mean_accuracies = []
+    for k in range(5, 100, 5):
+        sc, acc = apply_k_fold(5, k, X, Y)
+        mean_accuracies.append(acc)
+
+    plt.title("k_fold parameter tuning")
+    plt.xlabel("k")
+    plt.ylabel("mean accuracy")
+    plt.plot(range(5, 100, 5), mean_accuracies, 'o:g')
+    plt.show()
